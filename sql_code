@@ -1,0 +1,27 @@
+with distinct_count as (
+    select
+        CAMSERV_TAG_NO,
+        TEST_DATE,
+        TEST_RESULT,
+        sum(CAMSERV_TAG_NO and TEST_RESULT = 'PASS') as total_pass,
+        sum(CAMSERV_TAG_NO and TEST_RESULT = 'FAIL') as total_fail
+    from
+        valve
+    group by
+        CAMSERV_TAG_NO
+    having
+        TEST_RESULT = 'PASS' or TEST_RESULT = 'FAIL' and TEST_DATE <> '' and TEST_DATE = min(TEST_DATE)
+
+
+)
+
+select 
+    CAMSERV_TAG_NO,
+    TEST_DATE,
+    TEST_RESULT,
+    total_pass,
+    total_fail
+from
+    distinct_count
+order by
+    CAMSERV_TAG_NO
